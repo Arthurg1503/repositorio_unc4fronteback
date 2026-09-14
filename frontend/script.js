@@ -31,6 +31,29 @@ const botaoSalvar = document.getElementById("botaoSalvar");
     }
      }
 
+     form.addEventListener("submit", async (evento) => { //inicia a leitura do botão salvar
+        evento.preventDefault(); //não diexa a pagina atualizar
+
+           const nome = nomeInput.value;
+           const email = emailInput.value;
+
+           const usuario = {
+            nome,
+            email
+           };
+
+           await fetch (API_URL,{
+             method: "POST",
+             headers: {
+                "Content-Type": "application/json"
+             },
+             body: JSON.stringify(usuario)
+             
+           });
+
+
+     });
+
 //Inicia ja com nossa listagem 
 carregarUsuarios();
 
