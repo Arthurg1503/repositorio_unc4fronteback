@@ -23,14 +23,29 @@ function salvarUsuarios(usuarios) {
     fs.writeFileSync(ARQUIVO, JSON.stringify(usuarios, null, 2));
 }
 
-// GET: listar todos
-app.get('/api/usuarios', (req, res) => {
+// GET: POR ID.
+app.get('/api/usuario/:id', (req, res) => {
  const usuarios = leituraUsuarios();
+ const id = Number(req.params.id);
+ const usuario = usuarios.find(usuario => usuario.id === id);
+   if (!usuario) {
+       return res.status(404).json({
+         mensagem: "Usuario não encontrado"
+       });
+   }
 
 
 
- res.json(usuarios);
+
+ res.json(usuario);
 });
+//GET: PORTODOS
+app.get('/api/usuarios', (req, res) => {
+    const usuarios = leituraUsuarios();
+    res.json(usuarios);
+});
+ 
+
 
 //POST: Criar
 app.post ('/api/usuarios', (req, res) => {
@@ -55,11 +70,28 @@ res.status(201).json(novoUsuario); //retorna sucesso ao criar novo usuario
 
 
 
-})              
+});          
 
+//PUT: Editar
+app.put('/api/usuarios/:id', (req, res) => {
+    const {nome, email} = req.body; //pega informação do corpo da requisição
+    const usuarios = leituraUsuarios(); //função de leitura ja criada
+    const id =  Number(req.params.id);//estamos trabalhando com parametros
+    
+    
+    
+    const usuario = usuarios.find(usuario => usuario.id === id);
+    //find vai procurar a função se usuario id é igual em 
+    // valor do id passado pelo front
+    usuario.nome = nome;
+    usuario.email = email;
 
+    salvarUsuarios(usuarios); //salva no arquivo
 
+ 
+res.json(usuario); 
+});
 
 app.listen(PORT, () => {
     console.log(`servidor atualizado em http://localhost:${PORT}`);
-})
+});
