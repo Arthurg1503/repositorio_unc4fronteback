@@ -59,6 +59,14 @@ const {nome, email} = req.body; //leitura da req do body
 
 const usuarios = leituraUsuarios(); //fazemos a leitura dos usuarios para a memoria ram 
 
+
+const emailExiste = usuarios.some(usuario => usuario.email === emailExiste);
+
+  if (emailExiste){
+      return res.status (409) .json({mensagem: "email ja cadastrado"});
+    
+  }
+
 const novoUsuario = {id: Date.now(), nome, email};// fazemos os objetos do novo usuario
 
 usuarios.push(novoUsuario); //adicionamos ao final da lista de usuarios
@@ -66,9 +74,6 @@ usuarios.push(novoUsuario); //adicionamos ao final da lista de usuarios
 salvarUsuarios(usuarios); //salvamos o usuario no arquivo
 
 res.status(201).json(novoUsuario); //retorna sucesso ao criar novo usuario
-
-
-
 
 });          
 
@@ -110,8 +115,6 @@ app.delete("/api/usuarios/:id", (req, res) => {
 
     res.status(204).send();
 })
-
-
 
 
 app.listen(PORT, () => {
